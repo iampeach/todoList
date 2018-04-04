@@ -54,6 +54,16 @@ h1 {
     line-height: 37px;
 }
 
+.list-cross {
+    color: rgba(109, 68, 67, 0.4);
+    font-size: 24px;
+    line-height: 37px;
+}
+
+.current-list-cross {
+    color: rgba(165, 86, 85, 0.9);
+}
+
 .button {
     background-color: transparent;
     box-sizing: border-box;
@@ -115,6 +125,9 @@ li {
 }
 
 .inline {
+    display: inline-block;
+}
+.inline > * {
     display: inline-block;
 }
 

@@ -9,14 +9,23 @@ class ListTitle extends React.Component {
     click(e) {
         this.props.choose(this.props.index);
     }
+    deleteList(e) {
+        this.props.deleteList(this.props.index);
+    }
     render() {
         return (
+            <div className="inline">
             <div 
                 className={this.props.className} 
                 contentEditable={this.props.changable}
                 onClick={(e)=>this.click(e)}
             >
                 {this.props.name}
+            </div>
+                <button 
+                    className={"button list-cross "+this.props.buttonClass}
+                    onClick={(e)=>this.deleteList(e)}
+                > x </button>
             </div>
         );
     }
@@ -26,6 +35,9 @@ class Listbar extends React.Component {
     chooseList = (index) => {
         this.props.chooseList(index);
     }
+    deleteList = (index) => {
+        this.props.deleteList(index);
+    }
     addList(e) { this.props.addClick(); }
     render() {
         var listTitles=[];
@@ -34,9 +46,11 @@ class Listbar extends React.Component {
                 listTitles.push(
                     <ListTitle
                         className="list-name current-list"
+                        buttonClass="current-list-cross"
                         name={this.props.listBar[i].name} 
                         index={i} 
                         choose={this.chooseList}
+                        deleteList={this.deleteList}
                         changable="true"
                     />
                 );
@@ -44,9 +58,11 @@ class Listbar extends React.Component {
                 listTitles.push(
                     <ListTitle
                         className="list-name"
+                        buttonClass=""
                         name={this.props.listBar[i].name} 
                         index={i} 
                         choose={this.chooseList}
+                        deleteList={this.deleteList}
                         changable="false"
                     />
                 );
@@ -233,7 +249,7 @@ class Todolist extends React.Component {
             todoListData:[
                 {   name: 'Life', 
                     items:[
-                        {name: 'study EE QAQ', done: false}
+                        {name: 'study EE', done: false}
                     ]
                 }
             ]
@@ -242,6 +258,18 @@ class Todolist extends React.Component {
     chooseList = (index) => {
         this.setState({
             cur: index
+        });
+    }
+    deleteList = (index) => {
+        let todolist = this.state.todoListData;
+        todolist.splice(index, 1);
+        this.setState({
+            todoListData: todolist
+        });
+        let curIndex = index;
+        if (curIndex === todolist.length) curIndex--;
+        this.setState({
+            cur: curIndex
         });
     }
     addItem = (i, itemName) => {
@@ -280,7 +308,7 @@ class Todolist extends React.Component {
                 lists.push(
                     <List 
                         className={"ease"} 
-                        list={this.state.todoListData[i]} 
+                        list={this.state.todoListData[i]}
                         addItem={this.addItem}
                         deleteItem={this.deleteItem}
                         itemDone={this.itemDone}
@@ -300,14 +328,14 @@ class Todolist extends React.Component {
                 );
             }
         }
-        console.log("debug");
         return (
             <div>
                 <h1 className="no-select"> todos </h1>
                 <Listbar 
                     listBar={this.state.todoListData} 
                     addClick={this.addList} 
-                    chooseList={this.chooseList} 
+                    chooseList={this.chooseList}
+                    deleteList={this.deleteList}
                     cur={this.state.cur}
                 />
                 {lists}
@@ -316,6 +344,8 @@ class Todolist extends React.Component {
         );
     }
 }
+
+ReactDOM.render(<Todolist />, document.getElementById('root'));
 
 ReactDOM.render(<Todolist />, document.getElementById('root'));
 </script>
